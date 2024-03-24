@@ -1,0 +1,13 @@
+{% extends '_shared/base.html' %}
+{% load core_tags %}
+
+{% block base_content %}
+    {% include '_comps/top_navbar.html' %}
+    <div class="container my-4 min-height-50">
+        <h1>Welcome to SimAcc3</h1>
+        <p>Integrated information system to manage your company data and business process!</p>
+        <button class="btn btn-lg btn-primary">Get Started</button>
+    </div>
+    {% notification messages %}
+    {% include '_comps/footer.html' %}
+{% endblock base_content %}

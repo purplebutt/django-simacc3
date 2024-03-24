@@ -1,0 +1,97 @@
+{% extends '_shared/base.html' %}
+{% load static %}
+{% load core_tags %}
+
+
+{% block page_title %}{{user|title}} profile{% endblock page_title %}
+
+{% block base_content %}
+<section id="profile">
+    {% notification messages %}
+    <div class="container">
+        <div class="py-1 d-flex flex-column justify-content-between align-items-center">
+            <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+                <h4 class="mt-2 fw-bolder">{{user|title}} Profile</h4>
+                <div> {% brand 1 30 %} </div>
+            </div>
+            <p class="text-primary fw-bolder my-2 text-danger">This is your account profile, you can modify or update your profile here</p>
+            <div class="row border-top pt-2">
+                <div class="col-md-4 mb-3 mb-md-0 text-center">
+                    <img id="profileImage" class="profile-left-img rounded-circle"
+                        type="button"
+                        title="change picture"
+                        data-bs-toggle="modal"
+                        data-bs-target="#updatePictureModal"
+                        hx-get="{% url 'accounts:update_picture' %}"
+                        hx-swap="innerHTML"
+                        hx-target="#updatePictureModalContent"
+                        src="{{user.profile.image.url}}" alt="{{user|title}} picture">
+                </div>
+                <div class="col-md-8">
+                    {% if user.profile.company %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            You are registered as employee to : {{user.profile.company}} <br>
+                            See my <a href="{% url 'company:my_company' %}">company details</a>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            You don't have company yet.<br>
+                            <a href="{% url 'company:company_add' %}">Create a new one</a> or 
+                            <a href="{% url 'company:company_list' %}">Join to an existed company</a>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                    <form method="POST" action="{% url 'accounts:myprofile' %}" class="row g-2">
+                        {% csrf_token %}
+                        {% form_float forms 2 %}
+                        <figcaption class="blockquote-footer mb-0 mt-2 text-muted">
+                            Date joined: <b class="text-danger">{{user.profile.created}}</b>&nbsp;|&nbsp;
+                            Last modified: <b class="text-danger">{{user.profile.modified}}</b>
+                        </figcaption>                        
+                        <div class="d-flex align-items-center gap-2 justify-content-center mt-2 border-top pt-3">
+                            <a type='button' onclick='history.back()' class='btn btn-secondary'>
+                                <i class='fa fa-rotate-left me-1'></i>Back</a>
+                            <button class="btn btn-secondary btn-reset" type="reset" value="Reset" 
+                                title="Reset" tabindex=-1><i class="fa fa-refresh me-2" aria-hidden="true"></i>Reset</button>
+                            <button id="btnProfileUpdate" type="submit" class="btn btn-primary">
+                                <i class="fa fa-save me-1" aria-hidden="true"></i>Save</button>
+                            <button id="btnLockUnlock" onclick="lockUnlockInput()" type="button" class="btn btn-warning">
+                                <i class="fa fa-unlock me-2"></i>Unlock</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% include 'account/_partials/mod_wrapper.html' with modal_id="updatePictureModal" modal_content_id="updatePictureModalContent" %}
+        {% include '_comps/toast_info.html' %}
+        {% comment %} {% notification messages %} {% endcomment %}
+        {% include '_comps/footer.html' %}
+    </div>
+    <script type="text/javascript">
+        function lockFormInput(){
+            const btnLockUnlock = document.getElementById("btnLockUnlock");
+            const inputs = document.querySelectorAll("input,textarea,select,#btnProfileUpdate");
+            inputs.forEach(i => {
+                i.setAttribute('disabled', null);
+                btnLockUnlock.innerHTML="<i class='fa fa-unlock me-2'></i>Unlock"
+            });
+        }
+        function lockUnlockInput(){
+            const btnLockUnlock = document.getElementById("btnLockUnlock");
+            const inputs = document.querySelectorAll("input,textarea,select,#btnProfileUpdate");
+            inputs.forEach(i => {
+                if (i.hasAttribute('disabled')){
+                    i.removeAttribute('disabled');
+                    btnLockUnlock.innerHTML="<i class='fa fa-lock me-2'></i>Lock"
+                }
+                else {
+                    i.setAttribute('disabled', null);
+                    btnLockUnlock.innerHTML="<i class='fa fa-unlock me-2'></i>Unlock"
+                }
+            });
+        }
+        lockFormInput() // call lockFormInput() to lock form by default
+    </script>
+</section>
+{% endblock base_content %}

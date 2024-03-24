@@ -1,0 +1,17 @@
+.logo {
+    color: var(--color);
+    font-size: var(--fs-3);
+    font-weight: 700;
+    transition: .2s all ease-out;
+    margin-left: 10px;
+    span {
+        font-weight: 800;
+        display: inline-block;
+        color: #F01F6E;
+    }
+    &:hover{
+        transition: .2s all ease-in;
+        letter-spacing: 1px;
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,31 @@
+{% load info %}
+{% load core_tags %}
+
+<nav class="navbar bg-dark navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <div>
+            <a class="navbar-brand" href="/">
+                {% info_companyname %}
+            </a>
+        </div>
+        {% include '_comps/top_menu.html' %}
+        <div>
+            {% if user.is_authenticated %}
+                {% comment %} Welcome <a class="btn">{{user}}</a> {% endcomment %}
+                <a id="userMenu" role="button" title="{{user|title}}" data-bs-toggle="dropdown">{% profile_pic user %}</a>
+                <ul class="dropdown-menu dropdown-menu-end text-center text-lg-start" aria-labelledby="userMenuDropdown">
+                    <a class="dropdown-item border" href="{% url 'accounts:myprofile' %}">
+                        <i class="fa fa-address-card me-2"></i>My Profile</a>
+                    <a class="dropdown-item border" type="button" href="{% url 'account_change_password' %}">
+                        <i class="fa fa-key me-2"></i>Change Password</a>
+                    <a class="dropdown-item border" type="button" href="{% url 'accounts:update_picture' %}">
+                        <i class="fa fa-image me-2"></i>Change Picture</a>
+                    <a class="dropdown-item border" type="button" href="{% url 'account_logout' %}">
+                        <i class="fa fa-right-from-bracket me-2"></i>Logout</a>
+                </ul>
+            {% else %}
+                <a class="btn btn-outline-secondary btn-sm" href="{% url 'account_login' %}">Login</a> or <a class="btn btn-outline-secondary btn-sm">Register</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

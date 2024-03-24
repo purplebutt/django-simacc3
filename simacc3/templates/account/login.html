@@ -1,0 +1,45 @@
+{% extends '_shared/base.html' %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load core_tags %}
+
+{% block base_content %}
+    {% include '_comps/top_navbar.html' %}
+    <div class="container my-4 min-height-50">
+        <h5 class="text-center">Enter your email and password to login</h5>
+        <form method="post" class="d-flex flex-column justify-content-center align-items-center">
+            {% csrf_token %}
+            <div class="w-50">
+                <div class="mb-3">
+                    {% render_field form.login.label_tag %}
+                    {% render_field form.login class+="form-control" %}
+                    {{ form.login.errors }}
+                </div>
+                <div class="mb-3">
+                    {% render_field form.password.label_tag %}
+                    {% render_field form.password class+="form-control" type="password" %}
+                    {{ form.password.errors }}
+                </div>
+                <div class="mb-3">
+                    {% render_field form.remember class="form-check-input" %}
+                    <label class="form-check-label" for="id_remember">Remember</label>
+                </div>
+                <ul class="mb-3 text-danger">
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                <div>
+                    <a href="/" type="button" class="btn btn-sm btn-secondary">Cancel</a>
+                    <input type="submit" class="btn btn-sm btn-primary ms-1" value="Login"></input>
+                </div>
+            </div>
+            <div class="container mt-4 pb-3 d-flex justify-content-around">
+                <small class='text-muted'>Forgot password..? 
+                    <a type="button" class="text-primary" href="{% url 'account_reset_password' %}">reset here</a>
+                </small>
+            </div>
+        </form> 
+    </div>
+    {% include '_comps/footer.html' %}
+{% endblock base_content %}
